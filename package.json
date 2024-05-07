@@ -1,0 +1,15 @@
+{
+  "name": "youtubey-cli",
+  "version": "1.0.0",
+  "description": "A command line interface for youtube music.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "bnn16",
+  "license": "ISC",
+  "dependencies": {
+    "google-auth-library": "^9.9.0",
+    "googleapis": "^136.0.0"
+  }
+}
