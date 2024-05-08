@@ -1,6 +1,7 @@
 import fs from "fs";
 import readline from "readline";
 import { google } from "googleapis";
+import { searchVideos } from "./requests.js";
 var OAuth2 = google.auth.OAuth2;
 
 // If modifying these scopes, delete your previously saved credentials
@@ -10,16 +11,7 @@ const TOKEN_DIR =
   (process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE) +
   "/.credentials/";
 const TOKEN_PATH = TOKEN_DIR + "youtube-nodejs-quickstart.json";
-
-// Load client secrets from a local file.
-fs.readFile("client_secret.json", function processClientSecrets(err, content) {
-  if (err) {
-    console.log("Error loading client secret file: " + err);
-    return;
-  }
-  // Authorize a client with the loaded credentials, then call the YouTube API.
-  authorize(JSON.parse(content), searchVideos);
-});
+const credentials = JSON.parse(fs.readFileSync("client_secret.json"));
 
 /**
  * Create an OAuth2 client with the given credentials, and then execute the
@@ -28,7 +20,7 @@ fs.readFile("client_secret.json", function processClientSecrets(err, content) {
  * @param {Object} credentials The authorization client credentials.
  * @param {function} callback The callback to call with the authorized client.
  */
-function authorize(credentials, callback) {
+export function authorize(callback) {
   const clientSecret = credentials.installed.client_secret;
   const clientId = credentials.installed.client_id;
   const redirectUrl = credentials.installed.redirect_uris[0];
@@ -94,41 +86,4 @@ function storeToken(token) {
     if (err) throw err;
     console.log("Token stored to " + TOKEN_PATH);
   });
-}
-
-/**
- * Lists the names and IDs of up to 10 files.
- *
- * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
- */
-function searchVideos(auth) {
-  const service = google.youtube("v3");
-
-  service.search.list(
-    {
-      auth: auth,
-      part: "snippet",
-      q: "ETO HALLOWEEN TECHNO/TEKK/FRENCHCORE RAVE MIX",
-    },
-    function (err, response) {
-      if (err) {
-        console.log("The API returned an error: " + err);
-        return;
-      }
-      const vids = response.data.items;
-      if (vids.length == 0) {
-        console.log("No round.");
-      } else {
-        console.log("Channels:");
-        for (let i = 0; i < vids.length; i++) {
-          var channel = vids[i];
-          console.log(
-            "%s (%s)",
-            channel.snippet.title,
-            channel.snippet.channelTitle,
-          );
-        }
-      }
-    },
-  );
 }
