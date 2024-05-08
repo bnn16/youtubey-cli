@@ -13,6 +13,7 @@ export async function searchVideos(auth, q) {
       auth: auth,
       part: "snippet",
       q: q,
+      maxResults: 25,
     });
 
     const vids = response;

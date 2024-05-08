@@ -1,7 +1,6 @@
 import fs from "fs";
 import readline from "readline";
 import { google } from "googleapis";
-import { searchVideos } from "./requests.js";
 var OAuth2 = google.auth.OAuth2;
 
 // If modifying these scopes, delete your previously saved credentials

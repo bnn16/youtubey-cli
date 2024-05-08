@@ -114,17 +114,31 @@ screen.key(["tab"], function (ch, key) {
   focusNextWidget();
 });
 
+let mySongs = [];
 playLists.on("select", async (data) => {
   authorize(async (auth) => {
+    mySongs = [];
     let songs = await getPlaylistItems(auth, playlistId[data.index - 3]);
-    let mySongs = [];
     songs.data.items.map((item) => {
-      mySongs.push(`${item.snippet.title} - ${item.snippet.channelTitle}`);
+      mySongs.push({
+        titile: item.snippet.title,
+        channel: item.snippet.channelTitle,
+        vidId: item.snippet.resourceId.videoId,
+        string: `${item.snippet.title} - ${item.snippet.channelTitle}`,
+      });
     });
     songsBox.clearItems();
-    songsBox.setItems([...mySongs]);
+    songsBox.setItems([...mySongs.map((song) => song.string)]);
     screen.render();
   });
+});
+
+songsBox.on("select", (data) => {
+  const textTitle = data.getText();
+  const index = mySongs.findIndex((song) => song.string === textTitle);
+  //textBox.setValue(mySongs[index].vidId);
+  // this is where we will play the song with a sub process
+  screen.render();
 });
 
 let query = "";
